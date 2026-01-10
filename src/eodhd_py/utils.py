@@ -14,7 +14,11 @@ def validate_normalize_symbol(symbol: str) -> str:
 
     # replace "." with "-" in markets
     if IS_MARKET:
-        symbol = symbol.replace(".", "-", 1)  # TODO: Check when this happens
+        # The API sees everything after a dot as the exchange.
+        # When symbol has 2 dots (e.g., "SYMBOL.MARKET.EXCHANGE"), replace first dot
+        # with hyphen to ensure API correctly parses it as "SYMBOL-MARKET" with exchange "EXCHANGE"
+        # instead of incorrectly treating "MARKET.EXCHANGE" as the exchange
+        symbol = symbol.replace(".", "-", 1)
     return symbol
 
 
