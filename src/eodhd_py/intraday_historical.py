@@ -1,6 +1,8 @@
 """Intraday Historical Data API endpoint."""
 
+import pandas as pd
 from datetime import datetime
+from typing import Literal, overload
 from .base import BaseEodhdApi
 from .utils import validate_normalize_symbol, validate_interval
 
@@ -17,6 +19,7 @@ class IntradayHistoricalApi(BaseEodhdApi):
     as other endpoint classes in the library.
     """
 
+    @overload
     async def get_intraday_data(
         self,
         symbol: str,
@@ -24,7 +27,29 @@ class IntradayHistoricalApi(BaseEodhdApi):
         from_date: datetime | None = None,
         to_date: datetime | None = None,
         split_dt: bool = False,
-    ) -> dict[str, str | int]:
+        df_output: Literal[True] = ...,
+    ) -> pd.DataFrame: ...
+
+    @overload
+    async def get_intraday_data(
+        self,
+        symbol: str,
+        interval: str = "5m",
+        from_date: datetime | None = None,
+        to_date: datetime | None = None,
+        split_dt: bool = False,
+        df_output: Literal[False] = ...,
+    ) -> dict[str, str | int]: ...
+
+    async def get_intraday_data(
+        self,
+        symbol: str,
+        interval: str = "5m",
+        from_date: datetime | None = None,
+        to_date: datetime | None = None,
+        split_dt: bool = False,
+        df_output: bool = True,
+    ) -> dict[str, str | int] | pd.DataFrame:
         """
         Get intraday historical data for a supplied symbol.
 
@@ -34,9 +59,10 @@ class IntradayHistoricalApi(BaseEodhdApi):
             from_date: Start date for data
             to_date: End date for data
             split_dt: If True, splits date and time into separate fields in the output
+            df_output: If True (default), return pandas DataFrame. If False, return dict.
 
         Returns:
-            JSON response as a dictionary containing intraday data
+            JSON response as a dictionary or pandas DataFrame (based on df_output setting)
 
         Raises:
             ValueError: If symbol or interval parameters are invalid
@@ -58,4 +84,4 @@ class IntradayHistoricalApi(BaseEodhdApi):
         if split_dt:
             params["split-dt"] = "1"
 
-        return await self._make_request(f"intraday/{symbol}", params=params)
+        return await self._make_request(f"intraday/{symbol}", params=params, df_output=df_output)

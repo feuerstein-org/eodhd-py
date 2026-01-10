@@ -29,7 +29,7 @@ async def test_get_user_info(mock_api_factory: MockApiFactory) -> None:
     result = await api.get_user_info()
 
     # Verify the request was made correctly
-    mock_make_request.assert_called_once_with("user")
+    mock_make_request.assert_called_once_with("user", df_output=False)
 
     # Verify the response matches what we expect
     assert result == mock_response
@@ -47,4 +47,4 @@ async def test_get_user_info_no_parameters(mock_api_factory: MockApiFactory) -> 
 
     await api.get_user_info()
 
-    mock_make_request.assert_called_once_with("user")
+    mock_make_request.assert_called_once_with("user", df_output=False)

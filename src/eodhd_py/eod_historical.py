@@ -1,12 +1,36 @@
 """EOD Historical Data API endpoint."""
 
+import pandas as pd
 from datetime import datetime
+from typing import Literal, overload
 from .base import BaseEodhdApi
 from .utils import validate_normalize_symbol, validate_order, validate_interval
 
 
 class EodHistoricalApi(BaseEodhdApi):
     """EodHistoricalApi endpoint class."""
+
+    @overload
+    async def get_eod_data(
+        self,
+        symbol: str,
+        interval: str = "d",
+        order: str = "a",
+        from_date: datetime | None = None,
+        to_date: datetime | None = None,
+        df_output: Literal[True] = ...,
+    ) -> pd.DataFrame: ...
+
+    @overload
+    async def get_eod_data(
+        self,
+        symbol: str,
+        interval: str = "d",
+        order: str = "a",
+        from_date: datetime | None = None,
+        to_date: datetime | None = None,
+        df_output: Literal[False] = ...,
+    ) -> dict[str, str | int]: ...
 
     async def get_eod_data(
         self,
@@ -15,7 +39,8 @@ class EodHistoricalApi(BaseEodhdApi):
         order: str = "a",
         from_date: datetime | None = None,
         to_date: datetime | None = None,
-    ) -> dict[str, str | int]:
+        df_output: bool = True,
+    ) -> dict[str, str | int] | pd.DataFrame:
         """
         Get EOD data for a supplied symbol.
 
@@ -25,9 +50,10 @@ class EodHistoricalApi(BaseEodhdApi):
             order: Order of data ("a"=ascending, "d"=descending)
             from_date: Start date for data
             to_date: End date for data
+            df_output: If True (default), return pandas DataFrame. If False, return dict.
 
         Returns:
-            JSON response as a dictionary
+            JSON response as a dictionary or pandas DataFrame (based on df_output setting)
 
         """
         # Parameter aliasing for backend compatibility
@@ -47,4 +73,4 @@ class EodHistoricalApi(BaseEodhdApi):
         if to_date is not None:
             params["to"] = to_date.strftime("%Y-%m-%d")
 
-        return await self._make_request(f"eod/{symbol}", params=params)
+        return await self._make_request(f"eod/{symbol}", params=params, df_output=df_output)

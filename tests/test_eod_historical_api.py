@@ -52,9 +52,12 @@ async def test_parameters(mock_api_factory: MockApiFactory, test_case: dict[str,
         order=test_case["order"],
         from_date=test_case["from_date"],
         to_date=test_case["to_date"],
+        df_output=False,
     )
 
-    mock_make_request.assert_called_once_with(f"eod/{test_case['symbol']}", params=test_case["expected_params"])
+    mock_make_request.assert_called_once_with(
+        f"eod/{test_case['symbol']}", params=test_case["expected_params"], df_output=False
+    )
 
 
 @pytest.mark.asyncio
@@ -65,7 +68,7 @@ async def test_function_calls_validators(mocker: MockerFixture, mock_api_factory
     spy_validate_interval = mocker.spy(eodhd_py.eod_historical, "validate_interval")
 
     api, _ = mock_api_factory.create(EodHistoricalApi)
-    await api.get_eod_data(symbol="GME", interval="d", order="a")
+    await api.get_eod_data(symbol="GME", interval="d", order="a", df_output=False)
 
     spy_validate_normalize_symbol.assert_called_once_with("GME")
     spy_validate_order.assert_called_once_with("a")
