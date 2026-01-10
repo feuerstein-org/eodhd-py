@@ -2,6 +2,7 @@
 
 from typing import cast
 from .base import BaseEodhdApi, EodhdApiConfig
+from .dividends import DividendsApi
 from .eod_historical import EodHistoricalApi
 from .intraday_historical import IntradayHistoricalApi
 from .user import UserApi
@@ -44,6 +45,11 @@ class EodhdApi:
         if key not in self._endpoint_instances:
             self._endpoint_instances[key] = endpoint_class(self.config)
         return self._endpoint_instances[key]
+
+    @property
+    def dividends_api(self) -> DividendsApi:
+        """DividendsApi client."""
+        return cast(DividendsApi, self._get_endpoint(DividendsApi))
 
     @property
     def eod_historical_api(self) -> EodHistoricalApi:
