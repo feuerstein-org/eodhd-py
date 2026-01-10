@@ -60,12 +60,12 @@ async def test_rate_limit_tokens_are_exhausted(test_config: EodhdApiConfig) -> N
 
             # Make 5 requests to exhaust the minute limit
             for i in range(5):
-                result = await api._make_request(f"eod/TEST{i}", cost=1.0)
+                result = await api._make_request(f"eod/TEST{i}", cost=1.0, df_output=False)
                 assert result == {"close": 100 + i}
 
             # Next request should fail with MaxSleepExceededError
             with pytest.raises(MaxSleepExceededError):
-                await api._make_request("eod/TEST_FAIL", cost=1.0)
+                await api._make_request("eod/TEST_FAIL", cost=1.0, df_output=False)
 
     finally:
         await session.close()
@@ -102,7 +102,7 @@ async def test_fetch_limits_only_once() -> None:
                 )
 
             for i in range(3):
-                await api._make_request(f"eod/TEST{i}")
+                await api._make_request(f"eod/TEST{i}", df_output=False)
 
             # Verify _user_limits_initialized flag is True after requests
             assert config._user_limits_initialized is True
@@ -226,7 +226,7 @@ async def test_get_endpoint_cost_called(mocker: MockerFixture, test_config: Eodh
                 payload={"data": "test"},
             )
 
-            await api._make_request("eod/AAPL")
+            await api._make_request("eod/AAPL", df_output=False)
 
             # Verify get_endpoint_cost was called with the endpoint
             mock_get_cost.assert_called_once_with("eod/AAPL")
@@ -278,11 +278,11 @@ async def test_429_retry_behavior(
                     payload={"close": 100},
                 )
 
-                result = await api._make_request("eod/AAPL")
+                result = await api._make_request("eod/AAPL", df_output=False)
                 assert result == {"close": 100}
             else:
                 with pytest.raises(aiohttp.ClientResponseError) as exc_info:
-                    await api._make_request("eod/AAPL")
+                    await api._make_request("eod/AAPL", df_output=False)
                 assert exc_info.value.status == 429
 
             # Verify sleep calls match expected exponential backoff
@@ -320,7 +320,7 @@ async def test_429_retry_refetches_rate_limits(mocker: MockerFixture, test_confi
                 f"https://eodhd.com/api/eod/AAPL?api_token={test_config.api_key}&fmt=json",
                 payload={"close": 100},
             )
-            result = await api._make_request("eod/AAPL")
+            result = await api._make_request("eod/AAPL", df_output=False)
 
             assert result == {"close": 100}
 
@@ -353,7 +353,7 @@ async def test_non_429_errors_not_retried(mocker: MockerFixture, test_config: Eo
             )
 
             with pytest.raises(aiohttp.ClientResponseError) as exc_info:
-                await api._make_request("eod/INVALID")
+                await api._make_request("eod/INVALID", df_output=False)
 
             assert exc_info.value.status == 404
             # Verify no retries occurred - sleep should not be called at all
@@ -405,7 +405,7 @@ async def test_fallback_to_extra_limit_on_max_sleep_exceeded_success(test_config
             )
 
             # Request should succeed by falling back to extra limit
-            result = await api._make_request("eod/AAPL", cost=5.0)
+            result = await api._make_request("eod/AAPL", cost=5.0, df_output=False)
             assert result == {"close": 150}
 
     finally:
@@ -431,10 +431,10 @@ async def test_fallback_to_extra_limit_raises_when_insufficient(test_config: Eod
             )
 
             # First request should succeed using available extra limit
-            await api._make_request("eod/AAPL", cost=1.0)
+            await api._make_request("eod/AAPL", cost=1.0, df_output=False)
             # No extra limit available, should raise NoTokensAvailableError
             with pytest.raises(NoTokensAvailableError):
-                await api._make_request("eod/AAPL", cost=5.0)
+                await api._make_request("eod/AAPL", cost=5.0, df_output=False)
 
     finally:
         await session.close()
@@ -454,7 +454,7 @@ async def test_max_sleep_exceeded_reraises_for_minute_limiter(test_config: Eodhd
 
         # Request should raise MaxSleepExceededError (no fallback to extra limiter)
         with pytest.raises(MaxSleepExceededError):
-            await api._make_request("eod/AAPL", cost=1.0)
+            await api._make_request("eod/AAPL", cost=1.0, df_output=False)
 
     finally:
         await session.close()

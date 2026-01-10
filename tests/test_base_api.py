@@ -8,6 +8,7 @@ from eodhd_py.intraday_historical import IntradayHistoricalApi
 from eodhd_py.client import EodhdApi
 from eodhd_py.user import UserApi
 import aiohttp
+import pandas as pd
 from typing import Any
 from urllib.parse import urlencode
 
@@ -84,7 +85,7 @@ async def test_make_request_parameters(
             mock_http.get(expected_url, payload=expected_response)  # type: ignore
 
             api = BaseEodhdApi(config=test_config)
-            result = await api._make_request(endpoint, params)
+            result = await api._make_request(endpoint, params, df_output=False)
 
             assert result == expected_response
 
@@ -109,6 +110,56 @@ async def test_make_request_parameters(
 
             # Ensure no unexpected parameters were added
             assert len(request_params) == len(params) + 2  # +2 for api_token and fmt
+
+    finally:
+        await session.close()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("endpoint", "params", "expected_response"),
+    [
+        ("eod/AAPL", {"period": "d", "order": "a"}, [{"date": "2024-01-01", "close": 150.0}]),
+        ("eod/GOOG", {"period": "w"}, [{"date": "2024-01-01", "close": 140.0}]),
+        ("eod/MSFT", {}, [{"date": "2024-01-01", "close": 380.0}]),
+    ],
+)
+async def test_make_request_returns_dataframe(
+    endpoint: str, params: dict[str, str], expected_response: list[dict[str, Any]], test_config: EodhdApiConfig
+) -> None:
+    """Test that _make_request returns a pandas DataFrame when df_output=True (default)."""
+    # Create a real aiohttp session
+    session = aiohttp.ClientSession()
+
+    try:
+        # Use test_config with the real session
+        test_config.session = session
+
+        # Use aioresponses to mock the HTTP response
+        with aioresponses() as mock_http:
+            base_url = "https://eodhd.com/api"
+
+            # api_token and fmt are always added
+            all_params = {"api_token": test_config.api_key, "fmt": "json"}
+            if params:
+                all_params.update(params)
+
+            expected_url = f"{base_url}/{endpoint}?{urlencode(all_params)}"
+
+            mock_http.get(expected_url, payload=expected_response)  # type: ignore
+
+            api = BaseEodhdApi(config=test_config)
+
+            # Test with df_output=True (explicitly)
+            result = await api._make_request(endpoint, params, df_output=True)
+            assert isinstance(result, pd.DataFrame)
+            assert len(result) == len(expected_response)
+
+            # Test with default (should also return DataFrame)
+            mock_http.get(expected_url, payload=expected_response)  # type: ignore
+            result_default = await api._make_request(endpoint, params)
+            assert isinstance(result_default, pd.DataFrame)
+            assert len(result_default) == len(expected_response)
 
     finally:
         await session.close()

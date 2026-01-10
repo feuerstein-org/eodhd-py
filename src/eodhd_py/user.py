@@ -40,4 +40,4 @@ class UserApi(BaseEodhdApi):
             aiohttp.ClientError: If the HTTP request fails
 
         """
-        return await self._make_request("user")
+        return await self._make_request("user", df_output=False)

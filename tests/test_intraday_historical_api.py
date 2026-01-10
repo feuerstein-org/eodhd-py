@@ -61,10 +61,13 @@ async def test_parameters(mock_api_factory: MockApiFactory, test_case: dict[str,
         from_date=test_case["from_date"],
         to_date=test_case["to_date"],
         split_dt=test_case["split_dt"],
+        df_output=False,
     )
 
     expected_symbol = validate_normalize_symbol(test_case["symbol"])
-    mock_make_request.assert_called_once_with(f"intraday/{expected_symbol}", params=test_case["expected_params"])
+    mock_make_request.assert_called_once_with(
+        f"intraday/{expected_symbol}", params=test_case["expected_params"], df_output=False
+    )
 
 
 @pytest.mark.asyncio
@@ -74,7 +77,7 @@ async def test_function_calls_validators(mocker: MockerFixture, mock_api_factory
     spy_validate_interval = mocker.spy(eodhd_py.intraday_historical, "validate_interval")
 
     api, _ = mock_api_factory.create(IntradayHistoricalApi)
-    await api.get_intraday_data(symbol="GME", interval="5m")
+    await api.get_intraday_data(symbol="GME", interval="5m", df_output=False)
 
     spy_validate_normalize_symbol.assert_called_once_with("GME")
     spy_validate_interval.assert_called_once_with("5m", data_type="intraday")

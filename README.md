@@ -18,15 +18,15 @@ async def main():
     # Use demo API key (or set your own)
     async with EodhdApi(api_key="demo") as api:
         # Get end-of-day historical data
-        data = await api.eod_historical_api.get_eod_data(symbol="AAPL", interval="d")
-        print(f"Retrieved {len(data)} data points")
+        df = await api.eod_historical_api.get_eod_data(symbol="AAPL", interval="d")
+        print(f"Retrieved {len(df)} data points")
 
 asyncio.run(main())
 ```
 
 ## Available APIs
 
-Currently the data is always returned as dictionary. A CSV implementation is planned for a future release.
+By default, most API methods return pandas DataFrames. You can get dictionary output by passing `df_output=False` to any method. Some APIs like the User Api by default return a dictionary.
 Existing EODHD APIs are being added gradually. Below are all the currently available options:
 
 ### EodHistoricalApi
@@ -38,12 +38,19 @@ from datetime import datetime
 from eodhd_py import EodhdApi
 
 async with EodhdApi(api_key="your_api_key") as api:
-    data = await api.eod_historical_api.get_eod_data(
+    # Returns a pandas DataFrame by default
+    df = await api.eod_historical_api.get_eod_data(
         symbol="AAPL",                      # Stock symbol
         interval="d",                       # "d" (daily), "w" (weekly), "m" (monthly)
         order="a",                          # "a" (ascending), "d" (descending)
         from_date=datetime(2024, 1, 1),     # Optional start date
         to_date=datetime(2024, 12, 31),     # Optional end date
+    )
+
+    # Or get a dictionary by passing df_output=False
+    data = await api.eod_historical_api.get_eod_data(
+        symbol="AAPL",
+        df_output=False,
     )
 ```
 
@@ -58,7 +65,7 @@ from datetime import datetime
 from eodhd_py import EodhdApi
 
 async with EodhdApi(api_key="your_api_key") as api:
-    data = await api.intraday_historical_api.get_intraday_data(
+    df = await api.intraday_historical_api.get_intraday_data(
         symbol="TSLA",                      # Stock symbol
         interval="5m",                      # "1m", "5m", or "1h"
         from_date=datetime(2024, 1, 1),     # Optional start date
@@ -69,7 +76,7 @@ async with EodhdApi(api_key="your_api_key") as api:
 
 ### UserApi
 
-Provides access to user account information and API usage statistics. [EODHD Documentation](https://eodhd.com/financial-apis/user-api)
+Provides access to user account information and API usage statistics. [EODHD Documentation](https://eodhd.com/financial-apis/user-api). Output is a dictonary instead of a dataframe.
 
 ```python
 from eodhd_py import EodhdApi

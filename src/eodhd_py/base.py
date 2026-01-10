@@ -2,8 +2,9 @@
 
 import asyncio
 import aiohttp
+import pandas as pd
 from datetime import datetime
-from typing import Any
+from typing import Any, Literal, overload
 from pydantic import BaseModel, Field, ConfigDict
 from steindamm import AsyncTokenBucket, MaxSleepExceededError
 from .costs import get_endpoint_cost
@@ -247,12 +248,31 @@ class BaseEodhdApi:
         if self.config.should_close_session() and self.session and not self.session.closed:
             await self.session.close()
 
-    async def _make_request(  # TODO: Add option to return dataframe?
+    @overload
+    async def _make_request(
         self,
         endpoint: str,
         params: dict[str, str] | None = None,
         cost: float | None = None,
-    ) -> dict[str, Any]:
+        df_output: Literal[True] = ...,
+    ) -> pd.DataFrame: ...
+
+    @overload
+    async def _make_request(
+        self,
+        endpoint: str,
+        params: dict[str, str] | None = None,
+        cost: float | None = None,
+        df_output: Literal[False] = ...,
+    ) -> dict[str, Any]: ...
+
+    async def _make_request(
+        self,
+        endpoint: str,
+        params: dict[str, str] | None = None,
+        cost: float | None = None,
+        df_output: bool = True,
+    ) -> dict[str, Any] | pd.DataFrame:
         """
         Make an HTTP request to the EODHD API with rate limiting and retry logic.
 
@@ -260,9 +280,10 @@ class BaseEodhdApi:
             endpoint: The API endpoint path (e.g., "eod/AAPL")
             params: Optional dictionary of query parameters
             cost: The cost of this request in API tokens (default: auto-calculated based on endpoint)
+            df_output: If True (default), return pandas DataFrame. If False, return dict.
 
         Returns:
-            JSON response as a dictionary
+            JSON response as a dictionary or pandas DataFrame (based on df_output setting)
 
         Raises:
             aiohttp.ClientError: If the HTTP request fails (including 429 after max retries)
@@ -294,7 +315,8 @@ class BaseEodhdApi:
                         self.session.request("GET", url, params=request_params) as response,
                     ):
                         response.raise_for_status()
-                        return await response.json()
+                        data = await response.json()
+                        return pd.DataFrame(data) if df_output else data
                 except MaxSleepExceededError as e:
                     # If daily limit is exhausted, try extra limit
                     if self.config.has_extra_rate_limiter() and "eodhd_daily_" in str(e):
@@ -304,7 +326,8 @@ class BaseEodhdApi:
                             self.session.request("GET", url, params=request_params) as response,
                         ):
                             response.raise_for_status()
-                            return await response.json()
+                            data = await response.json()
+                            return pd.DataFrame(data) if df_output else data
                     else:
                         raise
 
