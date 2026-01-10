@@ -97,4 +97,8 @@ def test_config() -> EodhdApiConfig:
         minute_requests_rate_limit=100,
         minute_remaining_limit=50,
         extra_limit=10,
+        # This is required because if CI runs shortly before midnight UTC,
+        # tests may time out due to rate limit resets.
+        daily_max_sleep=60,
+        minute_max_sleep=60,
     )

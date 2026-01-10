@@ -30,7 +30,7 @@ class EodHistoricalApi(BaseEodhdApi):
         from_date: datetime | None = None,
         to_date: datetime | None = None,
         df_output: Literal[False] = ...,
-    ) -> dict[str, str | int]: ...
+    ) -> list[dict[str, str | int]]: ...
 
     async def get_eod_data(
         self,
@@ -40,7 +40,7 @@ class EodHistoricalApi(BaseEodhdApi):
         from_date: datetime | None = None,
         to_date: datetime | None = None,
         df_output: bool = True,
-    ) -> dict[str, str | int] | pd.DataFrame:
+    ) -> list[dict[str, str | int]] | pd.DataFrame:
         """
         Get EOD data for a supplied symbol.
 

@@ -4,7 +4,7 @@ import asyncio
 import aiohttp
 import pandas as pd
 from datetime import datetime
-from typing import Any, Literal, overload
+from typing import Any
 from pydantic import BaseModel, Field, ConfigDict
 from steindamm import AsyncTokenBucket, MaxSleepExceededError
 from .costs import get_endpoint_cost
@@ -248,31 +248,13 @@ class BaseEodhdApi:
         if self.config.should_close_session() and self.session and not self.session.closed:
             await self.session.close()
 
-    @overload
-    async def _make_request(
-        self,
-        endpoint: str,
-        params: dict[str, str] | None = None,
-        cost: float | None = None,
-        df_output: Literal[True] = ...,
-    ) -> pd.DataFrame: ...
-
-    @overload
-    async def _make_request(
-        self,
-        endpoint: str,
-        params: dict[str, str] | None = None,
-        cost: float | None = None,
-        df_output: Literal[False] = ...,
-    ) -> dict[str, Any]: ...
-
     async def _make_request(
         self,
         endpoint: str,
         params: dict[str, str] | None = None,
         cost: float | None = None,
         df_output: bool = True,
-    ) -> dict[str, Any] | pd.DataFrame:
+    ) -> Any:
         """
         Make an HTTP request to the EODHD API with rate limiting and retry logic.
 

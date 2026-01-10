@@ -39,7 +39,7 @@ class IntradayHistoricalApi(BaseEodhdApi):
         to_date: datetime | None = None,
         split_dt: bool = False,
         df_output: Literal[False] = ...,
-    ) -> dict[str, str | int]: ...
+    ) -> list[dict[str, str | int]]: ...
 
     async def get_intraday_data(
         self,
@@ -49,7 +49,7 @@ class IntradayHistoricalApi(BaseEodhdApi):
         to_date: datetime | None = None,
         split_dt: bool = False,
         df_output: bool = True,
-    ) -> dict[str, str | int] | pd.DataFrame:
+    ) -> list[dict[str, str | int]] | pd.DataFrame:
         """
         Get intraday historical data for a supplied symbol.
 
