@@ -1,7 +1,7 @@
 """Tests for API cost mapping."""
 
 import pytest
-from eodhd_py.costs import get_endpoint_cost, ENDPOINT_COSTS
+from eodhd_py.api.costs import get_endpoint_cost, ENDPOINT_COSTS
 
 
 @pytest.mark.parametrize(

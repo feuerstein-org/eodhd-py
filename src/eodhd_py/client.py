@@ -1,11 +1,11 @@
 """Main EODHD API client."""
 
 from typing import cast
-from .base import BaseEodhdApi, EodhdApiConfig
-from .dividends import DividendsApi
-from .eod_historical import EodHistoricalApi
-from .intraday_historical import IntradayHistoricalApi
-from .user import UserApi
+from eodhd_py.base import BaseEodhdApi, EodhdApiConfig
+from eodhd_py.api.dividends import DividendsApi
+from eodhd_py.api.eod_historical import EodHistoricalApi
+from eodhd_py.api.intraday_historical import IntradayHistoricalApi
+from eodhd_py.api.user import UserApi
 
 
 class EodhdApi:

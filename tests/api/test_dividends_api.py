@@ -6,8 +6,8 @@ from typing import Any
 
 from pytest_mock import MockerFixture
 from conftest import MockApiFactory
-import eodhd_py.dividends
-from eodhd_py.dividends import DividendsApi
+import eodhd_py.api.dividends
+from eodhd_py.api.dividends import DividendsApi
 
 
 @pytest.mark.asyncio
@@ -73,7 +73,7 @@ async def test_parameters(mock_api_factory: MockApiFactory, test_case: dict[str,
 @pytest.mark.asyncio
 async def test_function_calls_validators(mocker: MockerFixture, mock_api_factory: MockApiFactory) -> None:
     """Test that DividendsApi calls validation functions."""
-    spy_validate_normalize_symbol = mocker.spy(eodhd_py.dividends, "validate_normalize_symbol")
+    spy_validate_normalize_symbol = mocker.spy(eodhd_py.api.dividends, "validate_normalize_symbol")
 
     api, _ = mock_api_factory.create(DividendsApi)
     await api.get_dividends(symbol="AAPL.US", df_output=False)
