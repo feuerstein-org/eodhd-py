@@ -3,10 +3,10 @@
 import pytest
 from aioresponses import aioresponses
 from eodhd_py.base import BaseEodhdApi, EodhdApiConfig
-from eodhd_py.eod_historical import EodHistoricalApi
-from eodhd_py.intraday_historical import IntradayHistoricalApi
+from eodhd_py.api.eod_historical import EodHistoricalApi
+from eodhd_py.api.intraday_historical import IntradayHistoricalApi
 from eodhd_py.client import EodhdApi
-from eodhd_py.user import UserApi
+from eodhd_py.api.user import UserApi
 import aiohttp
 import pandas as pd
 from typing import Any

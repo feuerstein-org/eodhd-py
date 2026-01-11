@@ -1,7 +1,7 @@
 """User API endpoint."""
 
 from typing import Any
-from .base import BaseEodhdApi
+from eodhd_py.base import BaseEodhdApi
 
 
 class UserApi(BaseEodhdApi):

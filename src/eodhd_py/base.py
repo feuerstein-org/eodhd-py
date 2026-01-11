@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Any
 from pydantic import BaseModel, Field, ConfigDict
 from steindamm import AsyncTokenBucket, MaxSleepExceededError
-from .costs import get_endpoint_cost
+from eodhd_py.api.costs import get_endpoint_cost
 
 HTTP_TOO_MANY_REQUESTS = 429
 

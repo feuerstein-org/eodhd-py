@@ -3,8 +3,8 @@
 import pandas as pd
 from datetime import datetime
 from typing import Literal, overload
-from .base import BaseEodhdApi
-from .utils import validate_normalize_symbol
+from eodhd_py.base import BaseEodhdApi
+from eodhd_py.utils import validate_normalize_symbol
 
 
 class DividendsApi(BaseEodhdApi):
