@@ -88,6 +88,38 @@ async with EodhdApi(api_key="your_api_key") as api:
     print(f"Extra limit: {user_info['extraLimit']}")
 ```
 
+### DividendsApi
+
+Provides access to dividend data for stocks. [EODHD Documentation](https://eodhd.com/financial-apis/api-splits-dividends)
+
+```python
+from datetime import datetime
+from eodhd_py import EodhdApi
+
+async with EodhdApi(api_key="your_api_key") as api:
+    df = await api.dividends_api.get_dividends(
+        symbol="AAPL.US",                   # Stock symbol with exchange
+        from_date=datetime(2020, 1, 1),     # Optional start date
+        to_date=datetime(2024, 12, 31),     # Optional end date
+    )
+```
+
+### SplitsApi
+
+Provides access to stock split data. [EODHD Documentation](https://eodhd.com/financial-apis/api-splits-dividends)
+
+```python
+from datetime import datetime
+from eodhd_py import EodhdApi
+
+async with EodhdApi(api_key="your_api_key") as api:
+    df = await api.splits_api.get_splits(
+        symbol="AAPL.US",                   # Stock symbol with exchange
+        from_date=datetime(1980, 1, 1),     # Optional start date
+        to_date=datetime(2024, 12, 31),     # Optional end date
+    )
+```
+
 ## Configuration Options
 
 ### **EodhdApiConfig**
