@@ -2,10 +2,11 @@
 
 from typing import cast
 from eodhd_py.base import BaseEodhdApi, EodhdApiConfig
-from eodhd_py.api.dividends import DividendsApi
 from eodhd_py.api.eod_historical import EodHistoricalApi
 from eodhd_py.api.intraday_historical import IntradayHistoricalApi
 from eodhd_py.api.user import UserApi
+from eodhd_py.api.dividends import DividendsApi
+from eodhd_py.api.splits import SplitsApi
 
 
 class EodhdApi:
@@ -47,11 +48,6 @@ class EodhdApi:
         return self._endpoint_instances[key]
 
     @property
-    def dividends_api(self) -> DividendsApi:
-        """DividendsApi client."""
-        return cast(DividendsApi, self._get_endpoint(DividendsApi))
-
-    @property
     def eod_historical_api(self) -> EodHistoricalApi:
         """EodHistoricalApi client."""
         return cast(EodHistoricalApi, self._get_endpoint(EodHistoricalApi))
@@ -65,3 +61,13 @@ class EodhdApi:
     def user_api(self) -> "UserApi":
         """UserApi client."""
         return cast(UserApi, self._get_endpoint(UserApi))
+
+    @property
+    def dividends_api(self) -> DividendsApi:
+        """DividendsApi client."""
+        return cast(DividendsApi, self._get_endpoint(DividendsApi))
+
+    @property
+    def splits_api(self) -> SplitsApi:
+        """SplitsApi client."""
+        return cast(SplitsApi, self._get_endpoint(SplitsApi))
