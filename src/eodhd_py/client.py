@@ -8,6 +8,7 @@ from eodhd_py.api.user import UserApi
 from eodhd_py.api.dividends import DividendsApi
 from eodhd_py.api.splits import SplitsApi
 from eodhd_py.api.earnings import EarningsApi
+from eodhd_py.api.ipos import IposApi
 
 
 class EodhdApi:
@@ -77,3 +78,8 @@ class EodhdApi:
     def earnings_api(self) -> EarningsApi:
         """EarningsApi client."""
         return cast(EarningsApi, self._get_endpoint(EarningsApi))
+
+    @property
+    def ipos_api(self) -> IposApi:
+        """IposApi client."""
+        return cast(IposApi, self._get_endpoint(IposApi))

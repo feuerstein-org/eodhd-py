@@ -6,6 +6,7 @@ from eodhd_py.api.dividends import DividendsApi
 from eodhd_py.api.earnings import EarningsApi
 from eodhd_py.api.eod_historical import EodHistoricalApi
 from eodhd_py.api.intraday_historical import IntradayHistoricalApi
+from eodhd_py.api.ipos import IposApi
 from eodhd_py.api.user import UserApi
 
 __all__ = (
@@ -15,5 +16,6 @@ __all__ = (
     "EodhdApi",
     "EodhdApiConfig",
     "IntradayHistoricalApi",
+    "IposApi",
     "UserApi",
 )

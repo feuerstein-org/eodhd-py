@@ -150,6 +150,29 @@ async with EodhdApi(api_key="your_api_key") as api:
     )
 ```
 
+### IposApi
+
+Provides access to historical and upcoming IPO data. [EODHD Documentation](https://eodhd.com/financial-apis/calendar-upcoming-earnings-ipos-and-splits)
+
+```python
+from datetime import datetime
+from eodhd_py import EodhdApi
+
+async with EodhdApi(api_key="your_api_key") as api:
+    # Query by date window (default: today + 7 days)
+    df = await api.ipos_api.get_ipos(
+        from_date=datetime(2024, 1, 1),     # Optional start date (uses filing_date)
+        to_date=datetime(2024, 1, 31),      # Optional end date (uses filing_date)
+    )
+```
+
+### APIs pending implementation
+
+Currently a lot of APIs haven't been implemented yet, below are the ones that were currently skipped:
+ - Historical & Upcoming Dividends API (Note that the more detailed historical dividends API is already implemented)
+ - Historical & Upcoming Splits API (Note that the more detailed historical splits API is already implemented)
+ - Earnings Trends API
+
 ## Configuration Options
 
 ### **EodhdApiConfig**
