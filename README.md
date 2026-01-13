@@ -166,6 +166,20 @@ async with EodhdApi(api_key="your_api_key") as api:
     )
 ```
 
+### ExchangesApi
+
+Provides access to the list of supported exchanges. [EODHD Documentation](https://eodhd.com/financial-apis/exchanges-api-list-of-tickers-and-trading-hours)
+
+```python
+from eodhd_py import EodhdApi
+
+async with EodhdApi(api_key="your_api_key") as api:
+    # Get list of all supported exchanges
+    df = await api.exchanges_api.get_exchanges()
+```
+
+> **Note:** The API returns not only stock exchanges but also other asset classes like Cryptocurrencies (CC), Forex (FOREX), Government Bonds (GBOND), and more.
+
 ### APIs pending implementation
 
 Currently a lot of APIs haven't been implemented yet, below are the ones that were currently skipped:
