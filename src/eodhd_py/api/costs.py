@@ -21,7 +21,7 @@ ENDPOINT_COSTS: Final[dict[str, int]] = {
     "div": 1,
     # Splits Data
     "splits": 1,
-    # Calendar Data (Earnings, etc.)
+    # Calendar Data (Earnings, IPOs, etc.)
     "calendar": 1,
 }
 

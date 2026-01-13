@@ -44,6 +44,9 @@ async def main() -> None:
         earnings_by_symbols = await api.earnings_api.get_earnings(symbols=["AAPL.US", "MCD.US"])
         logging.info("Earnings by symbols retrieved: %s", len(earnings_by_symbols))
 
+        ipos_data = await api.ipos_api.get_ipos()
+        logging.info("IPOs data retrieved: %s", len(ipos_data))
+
     logging.info("Done")
 
 
