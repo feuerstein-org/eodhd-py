@@ -17,6 +17,12 @@ ENDPOINT_COSTS: Final[dict[str, int]] = {
     "eod": 1,
     # Intraday Historical Data
     "intraday": 5,
+    # Dividends Data
+    "div": 1,
+    # Splits Data
+    "splits": 1,
+    # Calendar Data (Earnings, etc.)
+    "calendar": 1,
 }
 
 

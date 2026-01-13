@@ -120,6 +120,36 @@ async with EodhdApi(api_key="your_api_key") as api:
     )
 ```
 
+### EarningsApi
+
+Provides access to historical and upcoming earnings data. [EODHD Documentation](https://eodhd.com/financial-apis/calendar-upcoming-earnings-ipos-and-splits)
+
+> Note: The API documentation mentions that passing the date parameters together with symbols doesn't work. This is incorrect, the API will work as expected when dates are provided.
+
+```python
+from datetime import datetime
+from eodhd_py import EodhdApi
+
+async with EodhdApi(api_key="your_api_key") as api:
+    # Query by date window (default: today + 7 days)
+    df = await api.earnings_api.get_earnings(
+        from_date=datetime(2024, 1, 1),     # Optional start date
+        to_date=datetime(2024, 1, 31),      # Optional end date
+    )
+
+    # Query by symbols (default: today + 7 days)
+    df = await api.earnings_api.get_earnings(
+        symbols=["AAPL.US", "MSFT.US"],     # List of stock symbols
+    )
+
+    # Combine symbols with date filtering
+    df = await api.earnings_api.get_earnings(
+        symbols=["AAPL.US", "MSFT.US"],
+        from_date=datetime(2024, 1, 1),
+        to_date=datetime(2024, 12, 31),
+    )
+```
+
 ## Configuration Options
 
 ### **EodhdApiConfig**

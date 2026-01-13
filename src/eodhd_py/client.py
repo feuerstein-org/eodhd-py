@@ -7,6 +7,7 @@ from eodhd_py.api.intraday_historical import IntradayHistoricalApi
 from eodhd_py.api.user import UserApi
 from eodhd_py.api.dividends import DividendsApi
 from eodhd_py.api.splits import SplitsApi
+from eodhd_py.api.earnings import EarningsApi
 
 
 class EodhdApi:
@@ -71,3 +72,8 @@ class EodhdApi:
     def splits_api(self) -> SplitsApi:
         """SplitsApi client."""
         return cast(SplitsApi, self._get_endpoint(SplitsApi))
+
+    @property
+    def earnings_api(self) -> EarningsApi:
+        """EarningsApi client."""
+        return cast(EarningsApi, self._get_endpoint(EarningsApi))
