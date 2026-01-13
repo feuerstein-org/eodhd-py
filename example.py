@@ -52,6 +52,9 @@ async def main() -> None:
         # exchanges_data = await api.exchanges_api.get_exchanges()
         # logging.info("Exchanges data retrieved: %s", len(exchanges_data))
 
+        # exchange_symbols = await api.exchange_symbol_list_api.get_exchange_symbols(exchange_code="US")
+        # logging.info("Exchange symbols retrieved: %s", len(exchange_symbols))
+
     logging.info("Done")
 
 

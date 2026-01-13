@@ -180,6 +180,24 @@ async with EodhdApi(api_key="your_api_key") as api:
 
 > **Note:** The API returns not only stock exchanges but also other asset classes like Cryptocurrencies (CC), Forex (FOREX), Government Bonds (GBOND), and more.
 
+### ExchangeSymbolListApi
+
+Provides access to all tickers listed on a specific exchange. [EODHD Documentation](https://eodhd.com/financial-apis/exchanges-api-list-of-tickers-and-trading-hours)
+
+```python
+from eodhd_py import EodhdApi
+
+async with EodhdApi(api_key="your_api_key") as api:
+    # Get all tickers on the US exchange
+    df = await api.exchange_symbol_list_api.get_exchange_symbols(
+        exchange_code="US",                 # Exchange code (e.g., "US", "LSE", "XETRA")
+        delisted=False,                     # Set True to get delisted tickers only
+        type="common_stock",                # Optional: "common_stock", "preferred_stock", "stock", "etf", "fund"
+    )
+```
+
+> **Note:** For US stocks, use the unified exchange code 'US' which includes NYSE, NASDAQ, NYSE ARCA, and OTC markets. You can also use separate codes like 'NYSE', 'NASDAQ', 'BATS', WAR, etc.
+
 ### APIs pending implementation
 
 Currently a lot of APIs haven't been implemented yet, below are the ones that were currently skipped:

@@ -25,6 +25,8 @@ ENDPOINT_COSTS: Final[dict[str, int]] = {
     "calendar": 1,
     # Exchanges Data
     "exchanges": 1,
+    # Exchange Symbol List
+    "exchange-symbol-list": 1,
 }
 
 

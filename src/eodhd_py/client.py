@@ -4,6 +4,7 @@ from typing import cast
 from eodhd_py.base import BaseEodhdApi, EodhdApiConfig
 from eodhd_py.api.eod_historical import EodHistoricalApi
 from eodhd_py.api.exchanges import ExchangesApi
+from eodhd_py.api.exchange_symbol_list import ExchangeSymbolListApi
 from eodhd_py.api.intraday_historical import IntradayHistoricalApi
 from eodhd_py.api.user import UserApi
 from eodhd_py.api.dividends import DividendsApi
@@ -89,3 +90,8 @@ class EodhdApi:
     def ipos_api(self) -> IposApi:
         """IposApi client."""
         return cast(IposApi, self._get_endpoint(IposApi))
+
+    @property
+    def exchange_symbol_list_api(self) -> ExchangeSymbolListApi:
+        """ExchangeSymbolListApi client."""
+        return cast(ExchangeSymbolListApi, self._get_endpoint(ExchangeSymbolListApi))
