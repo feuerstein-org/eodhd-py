@@ -35,11 +35,14 @@ async def main() -> None:
         intraday_data = await api.intraday_historical_api.get_intraday_data(symbol="TSLA", interval="5m")
         logging.info("Intraday data retrieved: %s", len(intraday_data))
 
-        dividends_data = await api.dividends_api.get_dividends(symbol="TSLA")
+        dividends_data = await api.dividends_api.get_dividends(symbol="AAPL.US")
         logging.info("Dividends data retrieved: %s", len(dividends_data))
 
         splits_data = await api.splits_api.get_splits(symbol="AAPL.US")
         logging.info("Splits data retrieved: %s", len(splits_data))
+
+        earnings_by_symbols = await api.earnings_api.get_earnings(symbols=["AAPL.US", "MCD.US"])
+        logging.info("Earnings by symbols retrieved: %s", len(earnings_by_symbols))
 
     logging.info("Done")
 
