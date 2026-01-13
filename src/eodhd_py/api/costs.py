@@ -23,6 +23,8 @@ ENDPOINT_COSTS: Final[dict[str, int]] = {
     "splits": 1,
     # Calendar Data (Earnings, IPOs, etc.)
     "calendar": 1,
+    # Exchanges Data
+    "exchanges": 1,
 }
 
 
