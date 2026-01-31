@@ -1,8 +1,8 @@
 """Tests for UserApi endpoint class."""
 
 import pytest
-
 from conftest import MockApiFactory
+
 from eodhd_py.api.user import UserApi
 
 

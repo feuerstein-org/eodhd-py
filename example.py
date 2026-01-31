@@ -1,10 +1,12 @@
 """Sample EODHD API usage."""
 
-from eodhd_py import EodhdApi, EodhdApiConfig
 import asyncio
 import logging
 
+from eodhd_py import EodhdApi, EodhdApiConfig
+
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
 
 
 async def main() -> None:
@@ -12,7 +14,7 @@ async def main() -> None:
     # Example 1
     async with EodhdApi() as api:
         data = await api.eod_historical_api.get_eod_data(order="d", symbol="MSFT", interval="d")
-        logging.info("Retrieved EOD data: %s", len(data))
+        logger.info("Retrieved EOD data: %s", len(data))
 
     # Example 2
     # Using custom configuration
@@ -30,19 +32,19 @@ async def main() -> None:
     )
     async with EodhdApi(config=config) as api:
         eod_data = await api.eod_historical_api.get_eod_data(symbol="AAPL", interval="d")
-        logging.info("EOD data retrieved: %s", len(eod_data))
+        logger.info("EOD data retrieved: %s", len(eod_data))
 
         intraday_data = await api.intraday_historical_api.get_intraday_data(symbol="TSLA", interval="5m")
-        logging.info("Intraday data retrieved: %s", len(intraday_data))
+        logger.info("Intraday data retrieved: %s", len(intraday_data))
 
         dividends_data = await api.dividends_api.get_dividends(symbol="AAPL.US")
-        logging.info("Dividends data retrieved: %s", len(dividends_data))
+        logger.info("Dividends data retrieved: %s", len(dividends_data))
 
         splits_data = await api.splits_api.get_splits(symbol="AAPL.US")
-        logging.info("Splits data retrieved: %s", len(splits_data))
+        logger.info("Splits data retrieved: %s", len(splits_data))
 
         earnings_by_symbols = await api.earnings_api.get_earnings(symbols=["AAPL.US", "MCD.US"])
-        logging.info("Earnings by symbols retrieved: %s", len(earnings_by_symbols))
+        logger.info("Earnings by symbols retrieved: %s", len(earnings_by_symbols))
 
         # Below API requests require a real API key
 
@@ -55,7 +57,7 @@ async def main() -> None:
         # exchange_symbols = await api.exchange_symbol_list_api.get_exchange_symbols(exchange_code="US")
         # logging.info("Exchange symbols retrieved: %s", len(exchange_symbols))
 
-    logging.info("Done")
+    logger.info("Done")
 
 
 asyncio.run(main())

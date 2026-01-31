@@ -1,12 +1,14 @@
 """Test rate limiting functionality"""
 
+from typing import Any
+
+import aiohttp
 import pytest
 from aioresponses import aioresponses
-from eodhd_py.base import BaseEodhdApi, EodhdApiConfig
 from pytest_mock import MockerFixture
-import aiohttp
-from typing import Any
-from steindamm import NoTokensAvailableError, MaxSleepExceededError
+from steindamm import MaxSleepExceededError, NoTokensAvailableError
+
+from eodhd_py.base import BaseEodhdApi, EodhdApiConfig
 
 
 @pytest.mark.asyncio

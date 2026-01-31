@@ -1,8 +1,10 @@
 """Tests for utility functions in eodhd_py.utils."""
 
-import pytest
-from eodhd_py.utils import validate_normalize_symbol, validate_order, validate_interval
 import re
+
+import pytest
+
+from eodhd_py.utils import validate_interval, validate_normalize_symbol, validate_order
 
 
 @pytest.mark.parametrize(

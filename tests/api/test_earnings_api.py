@@ -1,14 +1,14 @@
 """Test Earnings API."""
 
 from datetime import datetime
-import pytest
 from typing import Any
 
-from pytest_mock import MockerFixture
+import pytest
 from conftest import MockApiFactory
+from pytest_mock import MockerFixture
+
 import eodhd_py.api.earnings
 from eodhd_py.api.earnings import EarningsApi
-
 
 MOCK_EARNINGS_RESPONSE = {
     "type": "Earnings",

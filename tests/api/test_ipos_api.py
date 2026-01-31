@@ -1,12 +1,13 @@
 """Test IPOs API."""
 
 from datetime import datetime
-import pytest
 from typing import Any
 
+import pandas as pd
+import pytest
 from conftest import MockApiFactory
-from eodhd_py.api.ipos import IposApi
 
+from eodhd_py.api.ipos import IposApi
 
 MOCK_IPOS_RESPONSE = {
     "type": "IPOs",
@@ -121,8 +122,6 @@ async def test_handles_empty_ipos(mock_api_factory: MockApiFactory) -> None:
 @pytest.mark.asyncio
 async def test_returns_dataframe_by_default(mock_api_factory: MockApiFactory) -> None:
     """Test that IposApi returns DataFrame when df_output=True (default)."""
-    import pandas as pd
-
     api, _ = mock_api_factory.create(
         IposApi,
         mock_response_data=MOCK_IPOS_RESPONSE,

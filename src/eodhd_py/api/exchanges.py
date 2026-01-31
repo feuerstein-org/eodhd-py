@@ -1,7 +1,9 @@
 """Exchanges API endpoint."""
 
-import pandas as pd
 from typing import Literal, overload
+
+import pandas as pd
+
 from eodhd_py.base import BaseEodhdApi
 
 
