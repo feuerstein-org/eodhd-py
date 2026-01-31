@@ -1,11 +1,12 @@
 """Test Dividends API."""
 
 from datetime import datetime
-import pytest
 from typing import Any
 
-from pytest_mock import MockerFixture
+import pytest
 from conftest import MockApiFactory
+from pytest_mock import MockerFixture
+
 import eodhd_py.api.dividends
 from eodhd_py.api.dividends import DividendsApi
 

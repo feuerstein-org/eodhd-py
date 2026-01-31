@@ -1,6 +1,7 @@
 """User API endpoint."""
 
 from typing import Any
+
 from eodhd_py.base import BaseEodhdApi
 
 

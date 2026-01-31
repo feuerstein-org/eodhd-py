@@ -1,12 +1,14 @@
 """Base classes for EodhdApi and its endpoints."""
 
 import asyncio
+from datetime import UTC, datetime
+from typing import Any, Self
+
 import aiohttp
 import pandas as pd
-from datetime import datetime
-from typing import Any
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from steindamm import AsyncTokenBucket, MaxSleepExceededError
+
 from eodhd_py.api.costs import get_endpoint_cost
 
 HTTP_TOO_MANY_REQUESTS = 429
@@ -45,7 +47,8 @@ class EodhdApiConfig(BaseModel):
 
     The maximum wait time for rate limiting can be configured via daily_max_sleep (default: 3600 seconds)
     and minute_max_sleep (default: 120 seconds). If a request would require waiting longer than these
-    limits, a MaxSleepExceededError will be raised. If extra capacity is available, a NoTokensAvailableError will be raised instead.
+    limits, a MaxSleepExceededError will be raised.
+    If extra capacity is available, a NoTokensAvailableError will be raised instead.
 
     Retry behavior for 429 (Too Many Requests) responses can be configured via max_retries (default: 3).
     Retries use exponential backoff starting at 1 second. Set to 0 to disable retries.
@@ -98,18 +101,16 @@ class EodhdApiConfig(BaseModel):
     def daily_rate_limiter(self) -> Any:
         """Get the daily rate limiter instance."""
         if self._daily_rate_limiter is None:
-            raise RuntimeError(
-                "Rate limiters not initialized. Use async context manager or call initialize_rate_limiters()."
-            )
+            msg = "Rate limiters not initialized. Use async context manager or call initialize_rate_limiters()."
+            raise RuntimeError(msg)
         return self._daily_rate_limiter
 
     @property
     def extra_rate_limiter(self) -> Any:
         """Get the extra rate limiter instance (non-refilling)."""
         if self._extra_rate_limiter is None:
-            raise RuntimeError(
-                "Rate limiters not initialized. Use async context manager or call initialize_rate_limiters()."
-            )
+            msg = "Rate limiters not initialized. Use async context manager or call initialize_rate_limiters()."
+            raise RuntimeError(msg)
         return self._extra_rate_limiter
 
     def has_extra_rate_limiter(self) -> bool:
@@ -120,9 +121,8 @@ class EodhdApiConfig(BaseModel):
     def minute_rate_limiter(self) -> Any:
         """Get the minute rate limiter instance."""
         if self._minute_rate_limiter is None:
-            raise RuntimeError(
-                "Rate limiters not initialized. Use async context manager or call initialize_rate_limiters()."
-            )
+            msg = "Rate limiters not initialized. Use async context manager or call initialize_rate_limiters()."
+            raise RuntimeError(msg)
         return self._minute_rate_limiter
 
     async def initialize_rate_limiters(self, base_url: str) -> None:
@@ -177,16 +177,16 @@ class EodhdApiConfig(BaseModel):
                     if self.minute_requests_rate_limit is None:
                         minute_limit = int(response.headers.get("x-ratelimit-limit", 1400))
                         minute_remaining_limit = int(response.headers.get("x-ratelimit-remaining", minute_limit))
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 # TODO: Remove once logging is added
                 print(f"Failed to fetch user limits: {e}. Using default or configured limits.")  # noqa: T201
 
         api_key_hash = self.rate_limit_key or str(abs(hash(self.api_key)))[:8]  # Short hash for unique naming
 
-        # Daily limits reset at midnight UTC
+        # Daily limits reset at midnight GMT (UTC)
         # Use naive datetime for compatibility with steindamm
-        now = datetime.now()
-        last_midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        now = datetime.now(UTC)
+        last_midnight = now.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=None)
 
         # Initialize rate limiters with fetched or default limits
         self._daily_rate_limiter = AsyncTokenBucket(
@@ -228,19 +228,20 @@ class BaseEodhdApi:
     def __init__(self, config: EodhdApiConfig | None = None, api_key: str = "") -> None:
         """Initialize with either a config or an api_key."""
         if not config and not api_key:
-            raise ValueError("Either config or api_key must be provided")
+            msg = "Either config or api_key must be provided"
+            raise ValueError(msg)
         self.config = config or EodhdApiConfig(api_key=api_key)
         self.session = self.config.session
         self.BASE_URL = "https://eodhd.com/api"
 
-    async def __aenter__(self) -> "BaseEodhdApi":
+    async def __aenter__(self) -> Self:
         """Enter the asynchronous context manager."""
         # Increment reference count for session usage
         self.config.increment_session_ref()
         return self
 
     # TODO: handle exceptions
-    async def __aexit__(self, *args) -> None:  # type: ignore # noqa
+    async def __aexit__(self, *args) -> None:  # type: ignore # noqa: ANN002
         """Exit the asynchronous context manager and close session if no other instances are using it."""
         # Decrement reference count
         self.config.decrement_session_ref()
@@ -323,4 +324,5 @@ class BaseEodhdApi:
                 backoff_time = 2**attempt
                 await asyncio.sleep(backoff_time)
 
-        raise RuntimeError("Unexpected end of retry loop")
+        msg = "Unexpected end of retry loop"
+        raise RuntimeError(msg)

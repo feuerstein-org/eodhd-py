@@ -1,16 +1,18 @@
 """Test Base class"""
 
-import pytest
-from aioresponses import aioresponses
-from eodhd_py.base import BaseEodhdApi, EodhdApiConfig
-from eodhd_py.api.eod_historical import EodHistoricalApi
-from eodhd_py.api.intraday_historical import IntradayHistoricalApi
-from eodhd_py.client import EodhdApi
-from eodhd_py.api.user import UserApi
-import aiohttp
-import pandas as pd
 from typing import Any
 from urllib.parse import urlencode
+
+import aiohttp
+import pandas as pd
+import pytest
+from aioresponses import aioresponses
+
+from eodhd_py.api.eod_historical import EodHistoricalApi
+from eodhd_py.api.intraday_historical import IntradayHistoricalApi
+from eodhd_py.api.user import UserApi
+from eodhd_py.base import BaseEodhdApi, EodhdApiConfig
+from eodhd_py.client import EodhdApi
 
 # API endpoints to test for lazy loading and shared session
 # Each tuple contains the property name used for lazy loading and the corresponding class
@@ -205,8 +207,8 @@ async def test_shared_session_usage() -> None:
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize(("api_property_name", "api_class"), API_ENDPOINTS)
-async def test_async_context_manager_behavior(api_property_name: str, api_class: type) -> None:
+@pytest.mark.parametrize("api_property_name", [endpoint[0] for endpoint in API_ENDPOINTS])
+async def test_async_context_manager_behavior(api_property_name: str) -> None:
     """Test async context manager behavior for API endpoints."""
     config = EodhdApiConfig()
 

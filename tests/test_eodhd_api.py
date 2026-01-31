@@ -1,8 +1,10 @@
 """Tests for the EodhdApi class."""
 
+from unittest.mock import MagicMock, patch
+
 import pytest
+
 from eodhd_py.client import EodhdApi
-from unittest.mock import patch, MagicMock
 
 
 @pytest.mark.asyncio

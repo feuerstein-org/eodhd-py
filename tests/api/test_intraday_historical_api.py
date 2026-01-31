@@ -1,11 +1,12 @@
 """Tests for IntradayHistoricalApi endpoint class."""
 
 from datetime import datetime
-import pytest
 from typing import Any
 
-from pytest_mock import MockerFixture
+import pytest
 from conftest import MockApiFactory
+from pytest_mock import MockerFixture
+
 import eodhd_py.api.intraday_historical
 from eodhd_py.api.intraday_historical import IntradayHistoricalApi
 from eodhd_py.utils import validate_normalize_symbol

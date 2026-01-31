@@ -1,8 +1,10 @@
 """Earnings API endpoint."""
 
-import pandas as pd
 from datetime import datetime
 from typing import Any, Literal, overload
+
+import pandas as pd
+
 from eodhd_py.base import BaseEodhdApi
 from eodhd_py.utils import validate_normalize_symbol
 

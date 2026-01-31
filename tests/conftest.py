@@ -1,14 +1,16 @@
 """Test fixtures for API client tests."""
 
-from typing import TypeVar, Any
-from dataclasses import dataclass
-from unittest.mock import AsyncMock
-from eodhd_py.base import BaseEodhdApi, EodhdApiConfig
-from pytest_mock import MockerFixture
-import aiohttp
-import pytest
 import random
 import string
+from dataclasses import dataclass
+from typing import Any, TypeVar
+from unittest.mock import AsyncMock
+
+import aiohttp
+import pytest
+from pytest_mock import MockerFixture
+
+from eodhd_py.base import BaseEodhdApi, EodhdApiConfig
 
 
 def generate_random_api_key() -> str:

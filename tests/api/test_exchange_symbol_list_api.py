@@ -1,9 +1,10 @@
 """Test Exchange Symbol List API."""
 
-import pytest
 from typing import Any
 
+import pytest
 from conftest import MockApiFactory
+
 from eodhd_py.api.exchange_symbol_list import ExchangeSymbolListApi
 
 

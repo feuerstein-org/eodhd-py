@@ -1,8 +1,8 @@
 """Test Exchanges API."""
 
 import pytest
-
 from conftest import MockApiFactory
+
 from eodhd_py.api.exchanges import ExchangesApi
 
 
