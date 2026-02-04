@@ -16,7 +16,6 @@ dev = [
     "aioresponses",
     "pandas-stubs>=2.0.0",
     "pre-commit",
-    "printf-log-formatter",
     "coverage",
     "pytest",
     "pytest-asyncio",
